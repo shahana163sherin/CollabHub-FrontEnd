@@ -8,6 +8,8 @@ import { useEffect } from 'react'
 
 import PublicRoutes from './Routes/PublicRoute';
 import Home from './Pages/Home/Home';
+import { Toaster } from 'react-hot-toast';
+import {ToastContainer} from 'react-toastify'
 
 function App() {
  
@@ -21,8 +23,10 @@ function App() {
 
   return (
     <div>
-       {/* <PublicRoutes /> */}
-       <Home/>
+       <Toaster position="top-center" />
+       <ToastContainer/>
+       <PublicRoutes/>
+       {/* <Home/> */}
     
      </div>
   )

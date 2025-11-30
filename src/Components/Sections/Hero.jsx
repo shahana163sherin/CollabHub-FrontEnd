@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Hero (){
+  const navigate=useNavigate();
     return (
          <section className="relative pt-32 pb-20 px-6 z-10" data-aos="fade-down"
       data-aos-duration="1000">
@@ -22,11 +25,13 @@ export default function Hero (){
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button className="group px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl transition-all hover:-translate-y-1">
+              <button className="group px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl transition-all hover:-translate-y-1"
+             >
                  Join as a Team Lead
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </button>
-              <button className="px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all hover:-translate-y-1 shadow-sm">
+              <button className="px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all hover:-translate-y-1 shadow-sm"
+               onClick={()=>navigate("/registerMember")}>
                 Join as a Team Member
               </button>
             </div>
