@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 export default function  NavBar () {
+  const navigate=useNavigate();
     
     return(
         
@@ -16,7 +18,8 @@ export default function  NavBar () {
             <a href="#works" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">How It</a>
             <a href="#social" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Social</a>
             <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Contact</a>
-            <button className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all">
+            <button className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all"
+            onClick={()=>navigate("/login")}>
               Sign In
             </button>
             <button className="px-5 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 shadow-md hover:shadow-lg transition-all">

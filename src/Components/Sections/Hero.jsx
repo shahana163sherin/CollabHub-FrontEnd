@@ -26,7 +26,7 @@ export default function Hero (){
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <button className="group px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl transition-all hover:-translate-y-1"
-             >
+              onClick={()=>navigate("/registerLeader")}>
                  Join as a Team Lead
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </button>
