@@ -69,6 +69,43 @@ export const ChangePassword=createAsyncThunk("profile/changePassword",
             })
 
 
+
+            .addCase(EditProfile.pending,(state)=>{
+                state.loadng=true;
+                state.error=null;
+                state.successMessage=null;
+            })
+            .addCase(EditProfile.fulfilled,(state,action)=>{
+                state.loading=false;
+                state.data={...state.data,...action.payload.data};
+                state.successMessage=action.payload.message;
+
+            })
+
+            .addCase(EditProfile.rejected,(state,action)=>{
+                state.loading=false;
+                state.error=action.payload;
+            })
+
+
+
+            .addCase(ChangePassword.pending,(state)=>{
+                state.loading=true;
+                state.err=null;
+                state.successMessage=null;
+            })
+
+            .addCase(ChangePassword.fulfilled,(state,action)=>{
+                state.loading=false;
+                state.successMessage=action.payload.message;
+            })
+
+            .addCase(ChangePassword.rejected,(state,action)=>{
+                state.loading=false;
+                state.error=action.payload;
+            })
             
         }
-    })
+    });
+    export const {clearMessages}=ProfileSlice.actions;
+    export default ProfileSlice.reducer;

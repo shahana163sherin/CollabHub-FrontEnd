@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginApi } from "../../Api/authApi";
 import { showError, showSuccess } from "../../Components/UI/Toast";
 import { useNavigate } from "react-router-dom";
+import  {jwtDecode}  from "jwt-decode";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,6 +36,13 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await loginApi(form);
+      const token=res.data.accessToken;
+      const decoded=jwtDecode(token);
+      localStorage.setItem("accessToken",token);
+      localStorage.setItem("role",decoded.role);
+      // localStorage.setItem("user",JSON.stringify(res.user));
+      localStorage.setItem("userId",decoded.nameid);
+      console.log(decoded);
 
       // ⭐ Backend error handling like RegisterLeader
       if (!res?.isSuccess) {
@@ -50,8 +58,10 @@ export default function Login() {
       showSuccess(res.message);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      navigate("/dashboard");
+      setTimeout(() => {
+         navigate("/leaderdashboard");
+      }, 1500);
+     
 
     } catch (err) {
       

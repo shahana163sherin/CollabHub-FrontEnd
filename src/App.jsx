@@ -10,6 +10,12 @@ import PublicRoutes from './Routes/PublicRoute';
 import Home from './Pages/Home/Home';
 import { Toaster } from 'react-hot-toast';
 import {ToastContainer} from 'react-toastify'
+import { Route, Routes } from 'react-router-dom';
+import LeaderProtected from './Routes/ProtectedRoute/LeaderRoute';
+import LeaderDashboard from './Pages/Dashboard/TeamLeaderDashBoard';
+import Profile from './Pages/Profile/Profile';
+import EditMyProfile from './Pages/Profile/EditProfile';
+import ChangeMyPassword  from './Pages/Profile/ChangePassword';
 
 function App() {
  
@@ -25,7 +31,28 @@ function App() {
     <div>
        <Toaster position="top-center" />
        <ToastContainer/>
-       <PublicRoutes/>
+       <Routes>
+       <Route path="/*" element={<PublicRoutes />} />
+       
+        <Route path="/leaderdashboard" element={<LeaderProtected>
+          <LeaderDashboard/>
+        </LeaderProtected>}/>
+
+        <Route path="/leader/profile"element={ <LeaderProtected>
+            <Profile />
+          </LeaderProtected> }/>
+
+          <Route path="/leader/editProfile" element={<LeaderProtected>
+            <EditMyProfile/>
+          </LeaderProtected>}/>
+
+          <Route path="/leader/change-password" element={<LeaderProtected>
+            <ChangeMyPassword/>
+          </LeaderProtected>}/>
+        </Routes>
+
+
+     
        {/* <Home/> */}
     
      </div>
