@@ -44,9 +44,10 @@ export const refreshTokenApi=async(token)=>{
 }
 
 export const logoutApi=async(token)=>{
-    const res=await axiosInstance.post("/Auth/Logout",token,{
+    const res=await axiosInstance.post("/Auth/Logout",{
        headers:{
-        "Content-Type":"application/json",},
+        "Content-Type":"application/json",
+    Authorization: `Bearer ${token}`,},
     });
     return res.data;
 }

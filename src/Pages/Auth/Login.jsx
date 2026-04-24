@@ -2,7 +2,10 @@ import { useState } from "react";
 import { loginApi } from "../../Api/authApi";
 import { showError, showSuccess } from "../../Components/UI/Toast";
 import { useNavigate } from "react-router-dom";
-import  {jwtDecode}  from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import Button from "../../Components/UI/Button";
+import Input from "../../Components/UI/Input";
+import Card from "../../Components/UI/Card";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,7 +17,7 @@ export default function Login() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); 
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const validate = () => {
@@ -36,18 +39,19 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await loginApi(form);
-      const token=res.data.accessToken;
-      const decoded=jwtDecode(token);
-      localStorage.setItem("accessToken",token);
-      localStorage.setItem("role",decoded.role);
+      const token = res.data.accessToken;
+      console.log("Token:", token);
+      const decoded = jwtDecode(token);
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("role", decoded.role);
       // localStorage.setItem("user",JSON.stringify(res.user));
-      localStorage.setItem("userId",decoded.nameid);
+      localStorage.setItem("userId", decoded.nameid);
       console.log(decoded);
 
       // ⭐ Backend error handling like RegisterLeader
       if (!res?.isSuccess) {
         if (res?.errors) {
-          setErrors(res.errors); 
+          setErrors(res.errors);
         }
         showError(res.message || "Login failed");
         setLoading(false);
@@ -59,28 +63,28 @@ export default function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setTimeout(() => {
-         navigate("/leaderdashboard");
+        navigate("/leaderdashboard");
       }, 1500);
-     
+
 
     } catch (err) {
-      
+
       const resp = err?.response?.data;
       if (resp) {
-       
+
         if (resp.errors) {
           const mapped = {};
           Object.keys(resp.errors).forEach((key) => {
-           
+
             const normalized = key.charAt(0).toLowerCase() + key.slice(1);
-          
+
             mapped[normalized] = Array.isArray(resp.errors[key])
               ? resp.errors[key][0]
               : resp.errors[key];
           });
           setErrors(mapped);
         } else if (resp.message) {
-         
+
           setErrors({ general: resp.message });
           showError(resp.message);
         } else {
@@ -97,70 +101,96 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-7 rounded-xl shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-zinc-950 px-4 py-20 relative overflow-hidden">
+      {/* Background ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
-          />
-          {errors.email && (
-            <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-          )}
+      <div className="w-full max-w-md relative z-10 animate-slideDown">
+        <div className="flex flex-col items-center mb-8">
+          {/* CollabHub SVG Logo */}
+          <span className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent flex items-center gap-2 tracking-tight mb-2">
+            <svg className="w-10 h-10 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+            CollabHub
+          </span>
+          <p className="text-zinc-400">Welcome back! Please login to your account.</p>
         </div>
 
-        {/* Password */}
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Password</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
-          />
-          {errors.password && (
-            <p className="text-red-600 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
-        <div className="md:col-span-2 flex items-center gap-2 mb-2">
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={() => setShowPassword((s) => !s)}
-            />
-            <span className="text-gray-700 text-sm">Show Password</span>
-          </div>
+        <Card hover={false} className="p-8 md:p-10 border-zinc-800/80">
+          <form onSubmit={handleSubmit}>
+            {errors.general && (
+              <div className="mb-4 text-red-400 bg-red-500/10 border border-red-500/20 p-3 rounded-lg text-sm text-center">
+                {errors.general}
+              </div>
+            )}
+            {/* Email */}
+            <div className="mb-5">
+              <Input
+                type="email"
+                name="email"
+                label="Email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={handleChange}
+                error={errors.email}
+              />
+            </div>
 
-        {/* Submit */}
-        <button
-          disabled={loading}
-          type="submit"
-          className={`w-full py-3 rounded-lg text-white font-medium transition 
-            ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-        >
-          {loading ? "Loading..." : "Login"}
-        </button>
+            {/* Password */}
+            <div className="mb-5">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                label="Password"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                error={errors.password}
+              />
+            </div>
 
-        {/* Forgot password */}
-        <p className="text-center mt-4">
-          <a href="/forgot_password" className="text-blue-600 hover:underline">
-            Forgot password?
-          </a>
-        </p>
-      </form>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-2">
+                <input
+                  id="showPassword"
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={() => setShowPassword((s) => !s)}
+                  className="w-4 h-4 rounded border-zinc-700 bg-zinc-900/50 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-zinc-950"
+                />
+                <label htmlFor="showPassword" className="text-zinc-400 text-sm cursor-pointer select-none">
+                  Show Password
+                </label>
+              </div>
+
+              <a href="/forgot_password" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors">
+                Forgot password?
+              </a>
+            </div>
+
+            {/* Submit */}
+            <Button
+              disabled={loading}
+              type="submit"
+              variant="primary"
+              className="w-full py-3.5"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+
+            {/* Registration Links */}
+            <div className="mt-8 text-center text-zinc-400 text-sm border-t border-zinc-800/50 pt-6">
+              Don't have an account? <br className="sm:hidden" />
+              <span className="inline-flex gap-3 sm:gap-2 mt-2">
+                <a href="/registerLeader" className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">Lead</a>
+                <span className="text-zinc-600">|</span>
+                <a href="/registerMember" className="font-semibold text-teal-400 hover:text-teal-300 transition-colors">Member</a>
+              </span>
+            </div>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
